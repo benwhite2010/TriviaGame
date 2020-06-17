@@ -28,6 +28,7 @@ var answer2El = document.querySelector(".answer2");
 var answer3El = document.querySelector(".answer3");
 var answer4El = document.querySelector(".answer4");
 var promptEl = document.querySelector(".prompt");
+var highScoreEl = document.querySelector(".highScore");
 // store questions and answers in variables
 var question1 = "What is the windows equivalent for Terminal?";
 var answers1 = ["GitBash", "Firefox", "Node.js", "Spotify"];
@@ -40,26 +41,33 @@ var trueAnswers = [0, 1, 0];
 // create functions for incorrect or correct answers
 function buttonPress(buttonIndex) {
   // we need to match the value of the trueAnsers idex with the corresponding button press, if that is untrue, then BETTER STUDY MORE and decrement secondsLeft by 10
-
-  if (questionsAnswered === 0) {
-    makeQuestion(question2, answers2);
-  } else if (questionsAnswered === 1) {
-    makeQuestion(question3, answers3);
-  }
-  if (trueanswers[questionsAnswered] === buttonIndex) {
+  if (trueAnswers[questionsAnswered] === buttonIndex) {
     promptEl.textContent = "WELL DONE YA SMARTASS";
   } else {
     promptEl.textContent = "BETTER STUDY MORE";
     secondsLeft -= 10;
   }
+  if (questionsAnswered === 0) {
+    makeQuestion(question2, answers2);
+  } else if (questionsAnswered === 1) {
+    makeQuestion(question3, answers3);
+  } else {
+    gameOver();
+  }
+
+  // increment questionsAnswered by one every button press
+  questionsAnswered++;
+
+  // console.log("questionsAnswered" + questionsAnswered);
 }
 
-questionsAnswered++;
-
-console.log("questionsAnswered" + questionsAnswered);
-
 var questionsAnswered = 0;
-
+function gameOver() {
+  promptEl.textContent = "Game Over";
+  var initials = prompt("Enter your initials");
+  localStorage.setItem("High Score", initials + " " + secondsLeft);
+  highScoreEl.textContent = localStorage.getItem("High Score");
+}
 // here we define the makeQuestion function
 // we feed it the parameters for each question and answer
 function makeQuestion(question, answers) {
@@ -73,3 +81,11 @@ answer1El.addEventListener("click", () => buttonPress(0));
 answer2El.addEventListener("click", () => buttonPress(1));
 answer3El.addEventListener("click", () => buttonPress(2));
 answer4El.addEventListener("click", () => buttonPress(3));
+
+// Things left to do:
+// store the secondsLeft and time of gameOver in local storage
+/** render the secondsLeft on high score page using getLocalstorage
+ * Ideally it would create a new item in LocalStorage instead of setting High Score to the latest value
+ * 
+
+ */
